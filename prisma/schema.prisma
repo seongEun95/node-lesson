@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model artists {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  name      String   @db.VarChar(20)
+  age       Int      @db.UnsignedInt
+  createdAt DateTime @db.DateTime(0) @default(now())
+  updatedAt DateTime @db.DateTime(0) @default(now())
+  songs     songs[]
+}
+
+model songs {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  title     String   @db.VarChar(20)
+  lyrics    String   @db.Text
+  createdAt DateTime @db.DateTime(0) @default(now())
+  updatedAt DateTime @db.DateTime(0) @default(now())
+  artistId  Int?     @db.UnsignedInt
+  artists   artists? @relation(fields: [artistId], references: [id], map: "songs_ibfk_1")
+
+  @@index([artistId], map: "artistId")
+}
